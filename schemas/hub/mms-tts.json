@@ -1,0 +1,241 @@
+{
+  "schema_version": "1.0.0",
+  "id": "mms-tts",
+  "name": "MMS Text-to-Speech",
+  "version": "1.0.0",
+  "description": "Meta's Massively Multilingual Speech VITS voices: text to natural speech (16 kHz WAV). Small (~150 MB per language) and fast, also on the CPU. Pick the language you will type in. Licence CC BY-NC 4.0 (non-commercial).",
+  "author": "Meta AI",
+  "license": "CC-BY-NC-4.0",
+  "category": "audio",
+  "engine": "python_uv",
+  "hardware_requirements": {
+    "min_vram_gb": 1.0,
+    "min_ram_gb": 4.0,
+    "supported_accelerators": [
+      "cuda",
+      "cpu"
+    ]
+  },
+  "install": [
+    {
+      "step_type": "setup_venv",
+      "python_version": "3.11"
+    },
+    {
+      "step_type": "uv_pip_install",
+      "packages": [
+        "torch>=2.4.0",
+        "torchaudio>=2.4.0",
+        "transformers>=4.45.0",
+        "accelerate>=0.34.0",
+        "numpy",
+        "soundfile",
+        "sentencepiece",
+        "fastapi",
+        "uvicorn",
+        "pydantic"
+      ]
+    },
+    {
+      "step_type": "hf_download",
+      "repo_id": "facebook/mms-tts-eng",
+      "destination": "weights/model"
+    }
+  ],
+  "runtime": {
+    "archetype": "audio_pipeline",
+    "entrypoint": "audio_runner.py",
+    "arguments": [],
+    "transport": "loopback_http",
+    "health_endpoint": "/health",
+    "readiness_timeout_sec": 300
+  },
+  "ui": {
+    "title": "MMS Text-to-Speech",
+    "description": "Type text, get speech",
+    "inputs": [
+      {
+        "name": "text",
+        "label": "Text",
+        "widget": "textarea",
+        "required": true,
+        "placeholder": "Type text in this voice's language"
+      },
+      {
+        "name": "speed",
+        "label": "Speed",
+        "widget": "slider",
+        "min": 0.5,
+        "max": 2.0,
+        "step": 0.05,
+        "default": 1.0
+      }
+    ],
+    "output": {
+      "type": "audio",
+      "protocol": "ipc_stream"
+    }
+  },
+  "variants": [
+    {
+      "id": "eng",
+      "name": "English",
+      "description": "Meta's Massively Multilingual Speech VITS voice for English: turns text into natural speech (16 kHz WAV). Small (~150 MB) and fast, also on the CPU. Licence CC BY-NC 4.0 (non-commercial)."
+    },
+    {
+      "id": "pol",
+      "name": "Polski",
+      "description": "Meta's Massively Multilingual Speech VITS voice for Polish: turns text into natural speech (16 kHz WAV). Small (~150 MB) and fast, also on the CPU. Licence CC BY-NC 4.0 (non-commercial).",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "torchaudio>=2.4.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "numpy",
+            "soundfile",
+            "sentencepiece",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "facebook/mms-tts-pol",
+          "destination": "weights/model"
+        }
+      ]
+    },
+    {
+      "id": "deu",
+      "name": "Deutsch",
+      "description": "Meta's Massively Multilingual Speech VITS voice for German: turns text into natural speech (16 kHz WAV). Small (~150 MB) and fast, also on the CPU. Licence CC BY-NC 4.0 (non-commercial).",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "torchaudio>=2.4.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "numpy",
+            "soundfile",
+            "sentencepiece",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "facebook/mms-tts-deu",
+          "destination": "weights/model"
+        }
+      ]
+    },
+    {
+      "id": "fra",
+      "name": "Français",
+      "description": "Meta's Massively Multilingual Speech VITS voice for French: turns text into natural speech (16 kHz WAV). Small (~150 MB) and fast, also on the CPU. Licence CC BY-NC 4.0 (non-commercial).",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "torchaudio>=2.4.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "numpy",
+            "soundfile",
+            "sentencepiece",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "facebook/mms-tts-fra",
+          "destination": "weights/model"
+        }
+      ]
+    },
+    {
+      "id": "spa",
+      "name": "Español",
+      "description": "Meta's Massively Multilingual Speech VITS voice for Spanish: turns text into natural speech (16 kHz WAV). Small (~150 MB) and fast, also on the CPU. Licence CC BY-NC 4.0 (non-commercial).",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "torchaudio>=2.4.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "numpy",
+            "soundfile",
+            "sentencepiece",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "facebook/mms-tts-spa",
+          "destination": "weights/model"
+        }
+      ]
+    },
+    {
+      "id": "ukr",
+      "name": "Українська",
+      "description": "Meta's Massively Multilingual Speech VITS voice for Ukrainian: turns text into natural speech (16 kHz WAV). Small (~150 MB) and fast, also on the CPU. Licence CC BY-NC 4.0 (non-commercial).",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "torchaudio>=2.4.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "numpy",
+            "soundfile",
+            "sentencepiece",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "facebook/mms-tts-ukr",
+          "destination": "weights/model"
+        }
+      ]
+    }
+  ]
+}

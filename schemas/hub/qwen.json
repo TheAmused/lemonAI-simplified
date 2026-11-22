@@ -1,0 +1,276 @@
+{
+  "schema_version": "1.0.0",
+  "id": "qwen",
+  "name": "Qwen",
+  "version": "1.0.0",
+  "description": "Alibaba's Qwen 3.5–3.8 chat models in GGUF: multilingual chat, reasoning and coding, and they read images too (vision projector included). Pick the size that fits your GPU.",
+  "author": "Alibaba Qwen (GGUF by Unsloth)",
+  "license": "Apache-2.0",
+  "category": "llm",
+  "engine": "standalone_binary",
+  "hardware_requirements": {
+    "min_vram_gb": 4.5,
+    "min_ram_gb": 6.0,
+    "supported_accelerators": [
+      "cuda",
+      "rocm",
+      "metal",
+      "cpu"
+    ]
+  },
+  "install": [
+    {
+      "step_type": "hf_download",
+      "repo_id": "unsloth/Qwen3.5-4B-GGUF",
+      "filename": "Qwen3.5-4B-Q4_K_M.gguf",
+      "destination": "weights/model.gguf",
+      "sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4"
+    },
+    {
+      "step_type": "hf_download",
+      "repo_id": "unsloth/Qwen3.5-4B-GGUF",
+      "filename": "mmproj-F16.gguf",
+      "destination": "weights/mmproj.gguf",
+      "sha256": "cd88edcf8d031894960bb0c9c5b9b7e1fea6ebee02b9f7ce925a00d12891f864"
+    }
+  ],
+  "runtime": {
+    "archetype": "llama_cpp_server",
+    "entrypoint": "llama-server",
+    "arguments": [
+      "--ctx-size",
+      "16384",
+      "--parallel",
+      "1",
+      "--temp",
+      "0.7",
+      "--top-p",
+      "0.8",
+      "--top-k",
+      "20"
+    ],
+    "transport": "loopback_http",
+    "health_endpoint": "/health",
+    "readiness_timeout_sec": 300,
+    "context_window": {
+      "recommended": 16384,
+      "max_supported": 262144
+    },
+    "output_tokens": {
+      "recommended": 4096,
+      "max_supported": 262144
+    }
+  },
+  "ui": {
+    "title": "Qwen",
+    "description": "Chat, reasoning and coding",
+    "inputs": [
+      {
+        "name": "prompt",
+        "label": "Prompt",
+        "widget": "textarea",
+        "required": true,
+        "default": "Explain the difference between a process and a thread in five sentences."
+      },
+      {
+        "name": "system_prompt",
+        "label": "System prompt",
+        "widget": "textarea",
+        "placeholder": "Optional instructions for the assistant"
+      },
+      {
+        "name": "thinking",
+        "label": "Thinking",
+        "widget": "switch",
+        "default": false,
+        "description": "Let the model reason before it answers (slower, uses part of the output budget)"
+      },
+      {
+        "name": "temperature",
+        "label": "Temperature",
+        "widget": "slider",
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.05,
+        "default": 0.7,
+        "grid_cols": 2
+      },
+      {
+        "name": "max_tokens",
+        "label": "Max tokens",
+        "widget": "number",
+        "min": 64,
+        "max": 8192,
+        "step": 64,
+        "default": 2048,
+        "grid_cols": 1
+      }
+    ],
+    "output": {
+      "type": "markdown",
+      "protocol": "ipc_stream"
+    }
+  },
+  "variants": [
+    {
+      "id": "3-5-0-8b",
+      "name": "3.5 0.8B",
+      "description": "The smallest Qwen 3.5 (0.8B): instant answers on any machine, also on the CPU. Reads text and images (Q4_K_M GGUF on llama.cpp). Layers that do not fit the free VRAM run on the CPU (slower).",
+      "hardware_requirements": {
+        "min_vram_gb": 2.0,
+        "min_ram_gb": 4.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/Qwen3.5-0.8B-GGUF",
+          "filename": "Qwen3.5-0.8B-Q4_K_M.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "bd258782e35f7f458f8aced1adc053e6e92e89bc735ba3be89d38a06121dc517"
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/Qwen3.5-0.8B-GGUF",
+          "filename": "mmproj-F16.gguf",
+          "destination": "weights/mmproj.gguf",
+          "sha256": "56e4c6cfe73b0c82e3e82bc518d7591997e61d81f723fc41a586f4fa69ea2453"
+        }
+      ]
+    },
+    {
+      "id": "3-5-2b",
+      "name": "3.5 2B",
+      "description": "Qwen 3.5 2B: a fast everyday assistant for laptops. Reads text and images (Q4_K_M GGUF on llama.cpp). Layers that do not fit the free VRAM run on the CPU (slower).",
+      "hardware_requirements": {
+        "min_vram_gb": 3.0,
+        "min_ram_gb": 5.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/Qwen3.5-2B-GGUF",
+          "filename": "Qwen3.5-2B-Q4_K_M.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223"
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/Qwen3.5-2B-GGUF",
+          "filename": "mmproj-F16.gguf",
+          "destination": "weights/mmproj.gguf",
+          "sha256": "7035e9cb8d7c6a9681d07eef9a364783e86ea4cd73faab2eabb4f43a101830c7"
+        }
+      ]
+    },
+    {
+      "id": "3-5-4b",
+      "name": "3.5 4B",
+      "description": "Qwen 3.5 4B: good reasoning in about 4 GB of VRAM. Reads text and images (Q4_K_M GGUF on llama.cpp). Layers that do not fit the free VRAM run on the CPU (slower)."
+    },
+    {
+      "id": "3-5-9b",
+      "name": "3.5 9B",
+      "description": "Qwen 3.5 9B: the strongest small Qwen, a good default for 8 GB cards. Reads text and images (Q4_K_M GGUF on llama.cpp). Layers that do not fit the free VRAM run on the CPU (slower).",
+      "hardware_requirements": {
+        "min_vram_gb": 7.5,
+        "min_ram_gb": 11.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/Qwen3.5-9B-GGUF",
+          "filename": "Qwen3.5-9B-Q4_K_M.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "03b74727a860a56338e042c4420bb3f04b2fec5734175f4cb9fa853daf52b7e8"
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/Qwen3.5-9B-GGUF",
+          "filename": "mmproj-F16.gguf",
+          "destination": "weights/mmproj.gguf",
+          "sha256": "f70dc3509053962b0d0d3ee8a7eacebf5d60aa560cad78254ae8698516ae029f"
+        }
+      ]
+    },
+    {
+      "id": "3-8-27b",
+      "name": "3.8 27B",
+      "description": "Qwen 3.8 27B (dense): the newest Qwen, flagship-level chat and agentic coding for 24 GB cards. Reads text and images (Q4_K_M GGUF on llama.cpp). Layers that do not fit the free VRAM run on the CPU (slower).",
+      "hardware_requirements": {
+        "min_vram_gb": 18.5,
+        "min_ram_gb": 25.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/Qwen3.8-27B-GGUF",
+          "filename": "Qwen3.8-27B-UD-Q4_K_M.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "1bce504dfecd84153666928a41d8a66706f0158d3a317bc5196b72819d7dc529"
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/Qwen3.8-27B-GGUF",
+          "filename": "mmproj-F16.gguf",
+          "destination": "weights/mmproj.gguf",
+          "sha256": "cbb841a9ee0636b2ec172f5bb8df2ea8dfeb01e90fe7c6126581d662a0b4e43e"
+        }
+      ]
+    },
+    {
+      "id": "3-6-35b-a3b",
+      "name": "3.6 35B-A3B",
+      "description": "Qwen 3.6 35B-A3B (mixture of experts, about 3B active per token): large-model quality at small-model speed; runs well with part of the experts in system RAM. Reads text and images (Q4_K_M GGUF on llama.cpp). Layers that do not fit the free VRAM run on the CPU (slower).",
+      "hardware_requirements": {
+        "min_vram_gb": 24.0,
+        "min_ram_gb": 32.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "filename": "mmproj-F16.gguf",
+          "destination": "weights/mmproj.gguf",
+          "sha256": "8971ee4f331ff0a4c609374f32984b3d4e6dc086c0aa35f1d637fad1829e887f"
+        }
+      ]
+    }
+  ]
+}

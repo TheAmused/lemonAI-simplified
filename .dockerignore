@@ -1,0 +1,23 @@
+.git
+target/
+node_modules/
+**/node_modules/
+**/dist/
+**/__pycache__/
+**/*.pyc
+.pytest_cache/
+*.db
+backend/uploads/
+backend/tests/
+apps/
+crates/
+runtimes/
+tests/
+docs/
+*.md
+
+# Secrets: never part of the build context (docker-compose reads .env itself).
+.env
+.env.*
+!.env.example
+**/.env

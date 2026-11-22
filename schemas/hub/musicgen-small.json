@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0.0",
+  "id": "musicgen-small",
+  "name": "MusicGen Small",
+  "version": "1.0.0",
+  "description": "Meta's MusicGen (300M): instrumental music from a text description (genre, instruments, mood, tempo), up to 30 seconds, 32 kHz. No vocals. Licence CC BY-NC 4.0 (non-commercial).",
+  "author": "Meta AI",
+  "license": "CC-BY-NC-4.0",
+  "category": "audio",
+  "engine": "python_uv",
+  "hardware_requirements": {
+    "min_vram_gb": 4.0,
+    "min_ram_gb": 8.0,
+    "supported_accelerators": [
+      "cuda",
+      "cpu"
+    ]
+  },
+  "install": [
+    {
+      "step_type": "setup_venv",
+      "python_version": "3.11"
+    },
+    {
+      "step_type": "uv_pip_install",
+      "packages": [
+        "torch>=2.4.0",
+        "torchaudio>=2.4.0",
+        "transformers>=4.45.0",
+        "accelerate>=0.34.0",
+        "numpy",
+        "soundfile",
+        "sentencepiece",
+        "fastapi",
+        "uvicorn",
+        "pydantic"
+      ]
+    },
+    {
+      "step_type": "hf_download",
+      "repo_id": "facebook/musicgen-small",
+      "destination": "weights/model"
+    }
+  ],
+  "runtime": {
+    "archetype": "audio_pipeline",
+    "entrypoint": "audio_runner.py",
+    "arguments": [],
+    "transport": "loopback_http",
+    "health_endpoint": "/health",
+    "readiness_timeout_sec": 300
+  },
+  "ui": {
+    "title": "MusicGen",
+    "description": "Text to music",
+    "inputs": [
+      {
+        "name": "text",
+        "label": "Describe the music",
+        "widget": "textarea",
+        "required": true,
+        "default": "Upbeat lo-fi hip hop with warm piano chords, soft vinyl crackle and a relaxed drum groove, 85 BPM"
+      },
+      {
+        "name": "duration",
+        "label": "Length (seconds)",
+        "widget": "slider",
+        "min": 5,
+        "max": 30,
+        "step": 1,
+        "default": 10
+      }
+    ],
+    "output": {
+      "type": "audio",
+      "protocol": "ipc_stream"
+    }
+  }
+}

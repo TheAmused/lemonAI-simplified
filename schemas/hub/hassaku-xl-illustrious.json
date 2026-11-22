@@ -1,0 +1,214 @@
+{
+  "schema_version": "1.0.0",
+  "id": "hassaku-xl-illustrious",
+  "name": "Hassaku XL Illustrious",
+  "version": "1.0.0",
+  "description": "Ikena's Hassaku XL Illustrious anime SDXL family (v2.2, v3.0, v3.1): vivid anime shading and expressive characters. Can generate explicit (NSFW) images; tag prompts with safe / sensitive / nsfw / explicit to steer it. For adults only.",
+  "author": "Ikena (diffusers conversions by John6666)",
+  "license": "Fair AI Public License 1.0-SD",
+  "category": "image",
+  "engine": "python_uv",
+  "hardware_requirements": {
+    "min_vram_gb": 8.0,
+    "min_ram_gb": 16.0,
+    "supported_accelerators": [
+      "cuda"
+    ]
+  },
+  "install": [
+    {
+      "step_type": "setup_venv",
+      "python_version": "3.11"
+    },
+    {
+      "step_type": "uv_pip_install",
+      "packages": [
+        "torch>=2.4.0",
+        "diffusers>=0.30.0",
+        "transformers>=4.45.0",
+        "accelerate>=0.34.0",
+        "sentencepiece",
+        "protobuf",
+        "fastapi",
+        "uvicorn",
+        "pydantic"
+      ]
+    },
+    {
+      "step_type": "hf_download",
+      "repo_id": "John6666/hassaku-xl-illustrious-v31-sdxl",
+      "destination": "weights/model"
+    }
+  ],
+  "runtime": {
+    "archetype": "diffusers_pipeline",
+    "entrypoint": "diffusers_runner.py",
+    "arguments": [],
+    "transport": "loopback_http",
+    "health_endpoint": "/health",
+    "readiness_timeout_sec": 600
+  },
+  "ui": {
+    "title": "Hassaku XL Illustrious",
+    "description": "Vivid anime characters (18+)",
+    "inputs": [
+      {
+        "name": "prompt",
+        "label": "Prompt",
+        "widget": "textarea",
+        "required": true,
+        "default": "masterpiece, best quality, 1girl, solo, vibrant anime lighting, dynamic pose, detailed eyes"
+      },
+      {
+        "name": "negative_prompt",
+        "label": "Negative prompt",
+        "widget": "textarea",
+        "placeholder": "What to avoid, e.g. blurry, low quality, text",
+        "default": "worst quality, low quality, lowres, bad anatomy, bad hands, extra digits, watermark, signature"
+      },
+      {
+        "name": "aspect_ratio",
+        "label": "Aspect ratio",
+        "widget": "select",
+        "options": [
+          "1:1",
+          "16:9",
+          "9:16",
+          "4:3",
+          "3:4",
+          "3:2",
+          "2:3"
+        ],
+        "default": "1:1",
+        "grid_cols": 2
+      },
+      {
+        "name": "seed",
+        "label": "Seed",
+        "widget": "number",
+        "min": 0,
+        "max": 2147483647,
+        "step": 1,
+        "default": 42,
+        "grid_cols": 1
+      },
+      {
+        "name": "steps",
+        "label": "Inference steps",
+        "widget": "slider",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "default": 28,
+        "grid_cols": 2
+      },
+      {
+        "name": "guidance_scale",
+        "label": "Guidance",
+        "widget": "slider",
+        "min": 1.0,
+        "max": 15.0,
+        "step": 0.5,
+        "default": 6.0,
+        "grid_cols": 1
+      }
+    ],
+    "output": {
+      "type": "image",
+      "protocol": "ipc_stream"
+    }
+  },
+  "content_rating": "adult",
+  "variants": [
+    {
+      "id": "v2-2",
+      "name": "v2.2",
+      "description": "Hassaku XL Illustrious v2.2: crisp cel-shaded anime style with balanced saturation.",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "diffusers>=0.30.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "sentencepiece",
+            "protobuf",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "John6666/hassaku-xl-illustrious-v22-sdxl",
+          "destination": "weights/model"
+        }
+      ]
+    },
+    {
+      "id": "v3-0",
+      "name": "v3.0",
+      "description": "Hassaku XL Illustrious v3.0: upgraded shading depth and facial expressiveness.",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "diffusers>=0.30.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "sentencepiece",
+            "protobuf",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "John6666/hassaku-xl-illustrious-v30-sdxl",
+          "destination": "weights/model"
+        }
+      ]
+    },
+    {
+      "id": "v3-1",
+      "name": "v3.1 (Latest)",
+      "description": "Hassaku XL Illustrious v3.1: newest release with refined backgrounds, lighting, and anatomy.",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "diffusers>=0.30.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "sentencepiece",
+            "protobuf",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "John6666/hassaku-xl-illustrious-v31-sdxl",
+          "destination": "weights/model"
+        }
+      ]
+    }
+  ]
+}

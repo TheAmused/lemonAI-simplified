@@ -1,0 +1,85 @@
+{
+  "schema_version": "1.0.0",
+  "id": "whisper-large-v3",
+  "name": "Whisper Large v3",
+  "version": "1.0.0",
+  "description": "Multilingual speech recognition and transcription.",
+  "author": "OpenAI",
+  "license": "Apache-2.0",
+  "category": "audio",
+  "engine": "python_uv",
+  "hardware_requirements": {
+    "min_vram_gb": 4.0,
+    "min_ram_gb": 8.0,
+    "supported_accelerators": [
+      "cuda",
+      "cpu"
+    ]
+  },
+  "install": [
+    {
+      "step_type": "setup_venv",
+      "python_version": "3.11"
+    },
+    {
+      "step_type": "uv_pip_install",
+      "packages": [
+        "torch>=2.4.0",
+        "torchaudio>=2.4.0",
+        "transformers>=4.45.0",
+        "accelerate>=0.34.0",
+        "numpy",
+        "soundfile",
+        "fastapi",
+        "uvicorn",
+        "pydantic"
+      ]
+    },
+    {
+      "step_type": "hf_download",
+      "repo_id": "openai/whisper-large-v3",
+      "destination": "weights/model"
+    }
+  ],
+  "runtime": {
+    "archetype": "audio_pipeline",
+    "entrypoint": "audio_runner.py",
+    "arguments": [],
+    "transport": "loopback_http",
+    "health_endpoint": "/health",
+    "readiness_timeout_sec": 300
+  },
+  "ui": {
+    "title": "Whisper Transcription",
+    "description": "Speech to text in 90+ languages",
+    "inputs": [
+      {
+        "name": "audio_file",
+        "label": "Audio file",
+        "widget": "file_upload",
+        "accept": "audio/*",
+        "required": true
+      },
+      {
+        "name": "language",
+        "label": "Spoken language",
+        "widget": "select",
+        "options": [
+          "auto",
+          "en",
+          "pl",
+          "es",
+          "de",
+          "fr",
+          "ja",
+          "zh"
+        ],
+        "default": "auto"
+      }
+    ],
+    "output": {
+      "type": "text",
+      "protocol": "ipc_stream"
+    }
+  }
+}

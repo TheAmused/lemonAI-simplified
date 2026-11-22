@@ -1,0 +1,184 @@
+{
+  "schema_version": "1.0.0",
+  "id": "qwen-heretic",
+  "name": "Qwen Heretic",
+  "version": "1.0.0",
+  "description": "Qwen 3.5/3.6 with refusals removed (abliterated with Heretic by llmfan46). Uncensored — for adults only.",
+  "author": "llmfan46 (based on Alibaba Qwen)",
+  "license": "Apache-2.0",
+  "category": "llm",
+  "content_rating": "adult",
+  "engine": "standalone_binary",
+  "hardware_requirements": {
+    "min_vram_gb": 7.5,
+    "min_ram_gb": 10.0,
+    "supported_accelerators": [
+      "cuda",
+      "rocm",
+      "metal",
+      "cpu"
+    ]
+  },
+  "install": [
+    {
+      "step_type": "hf_download",
+      "repo_id": "llmfan46/Qwen3.5-9B-Ultra-Uncensored-Heretic-GGUF",
+      "filename": "Qwen3.5-9B-Ultra-Uncensored-Heretic-Q4_K_M.gguf",
+      "destination": "weights/model.gguf",
+      "sha256": "8d463c63e2c8759ad263cba59f1fa7a0be9a7cacb59b0fd0a787b7daa31597ad"
+    },
+    {
+      "step_type": "hf_download",
+      "repo_id": "llmfan46/Qwen3.5-9B-Ultra-Uncensored-Heretic-GGUF",
+      "filename": "Qwen3.5-9B-mmproj-BF16.gguf",
+      "destination": "weights/mmproj.gguf",
+      "sha256": "d89c4bc142d02ed64aeed5c0a358bdead9109f21f4ada03a6b2df17a1aa94d9e"
+    }
+  ],
+  "runtime": {
+    "archetype": "llama_cpp_server",
+    "entrypoint": "llama-server",
+    "arguments": [
+      "--ctx-size",
+      "16384",
+      "--parallel",
+      "1",
+      "--temp",
+      "0.7",
+      "--top-p",
+      "0.8",
+      "--top-k",
+      "20"
+    ],
+    "transport": "loopback_http",
+    "health_endpoint": "/health",
+    "readiness_timeout_sec": 300,
+    "context_window": {
+      "recommended": 16384,
+      "max_supported": 262144
+    },
+    "output_tokens": {
+      "recommended": 4096,
+      "max_supported": 262144
+    }
+  },
+  "ui": {
+    "title": "Qwen Heretic",
+    "description": "Uncensored chat (18+)",
+    "inputs": [
+      {
+        "name": "prompt",
+        "label": "Prompt",
+        "widget": "textarea",
+        "required": true,
+        "default": "Explain the difference between a process and a thread in five sentences."
+      },
+      {
+        "name": "system_prompt",
+        "label": "System prompt",
+        "widget": "textarea",
+        "placeholder": "Optional instructions for the assistant"
+      },
+      {
+        "name": "thinking",
+        "label": "Thinking",
+        "widget": "switch",
+        "default": false,
+        "description": "Let the model reason before it answers (slower, uses part of the output budget)"
+      },
+      {
+        "name": "temperature",
+        "label": "Temperature",
+        "widget": "slider",
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.05,
+        "default": 0.7,
+        "grid_cols": 2
+      },
+      {
+        "name": "max_tokens",
+        "label": "Max tokens",
+        "widget": "number",
+        "min": 64,
+        "max": 8192,
+        "step": 64,
+        "default": 2048,
+        "grid_cols": 1
+      }
+    ],
+    "output": {
+      "type": "markdown",
+      "protocol": "ipc_stream"
+    }
+  },
+  "variants": [
+    {
+      "id": "3-5-9b",
+      "name": "3.5 9B",
+      "description": "Qwen 3.5 9B with image input (Q4_K_M GGUF on llama.cpp). Uncensored: refusals were removed with Heretic (automatic abliteration), so it answers requests the original model declines. For adults; you are responsible for how you use it. Layers that do not fit the free VRAM run on the CPU (slower)."
+    },
+    {
+      "id": "3-6-27b",
+      "name": "3.6 27B",
+      "description": "Qwen 3.6 27B with image input (Q4_K_M GGUF on llama.cpp). Uncensored: refusals were removed with Heretic (automatic abliteration), so it answers requests the original model declines. For adults; you are responsible for how you use it. Layers that do not fit the free VRAM run on the CPU (slower).",
+      "hardware_requirements": {
+        "min_vram_gb": 18.5,
+        "min_ram_gb": 25.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "llmfan46/Qwen3.6-27B-uncensored-heretic-v2-GGUF",
+          "filename": "Qwen3.6-27B-uncensored-heretic-v2-Q4_K_M.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "74f7c89608331994bd43f0956b59366308e781281d18fc9eccb1f18af6e93951"
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "llmfan46/Qwen3.6-27B-uncensored-heretic-v2-GGUF",
+          "filename": "Qwen3.6-27B-mmproj-BF16.gguf",
+          "destination": "weights/mmproj.gguf",
+          "sha256": "c5c8c41da6d155a61edd21b7e3aa50b6ef77f122d502d36afe4a4d5c3e494d4f"
+        }
+      ]
+    },
+    {
+      "id": "3-6-35b-a3b",
+      "name": "3.6 35B-A3B",
+      "description": "Qwen 3.6 35B-A3B with image input (Q4_K_M GGUF on llama.cpp). Uncensored: refusals were removed with Heretic (automatic abliteration), so it answers requests the original model declines. For adults; you are responsible for how you use it. Layers that do not fit the free VRAM run on the CPU (slower).",
+      "hardware_requirements": {
+        "min_vram_gb": 23.0,
+        "min_ram_gb": 31.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF",
+          "filename": "Qwen3.6-35B-A3B-uncensored-heretic-Q4_K_M.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "b82f9f2155eb9c07139d48cc3a37880cf9d0edcca345ef6ad829b62941ccbb82"
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-GGUF",
+          "filename": "Qwen3.6-35B-A3B-uncensored-heretic-mmproj-BF16.gguf",
+          "destination": "weights/mmproj.gguf",
+          "sha256": "1c625f05cd52e90abc76a5f756226c3a5fe279593379c22f6c6846c970a0cd18"
+        }
+      ]
+    }
+  ]
+}

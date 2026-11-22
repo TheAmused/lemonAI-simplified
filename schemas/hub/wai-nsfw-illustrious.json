@@ -1,0 +1,274 @@
+{
+  "schema_version": "1.0.0",
+  "id": "wai-nsfw-illustrious",
+  "name": "WAI-NSFW-Illustrious",
+  "version": "1.0.0",
+  "description": "WAI0731's WAI-NSFW-Illustrious SDXL family: the most popular Illustrious anime merges for detailed characters and NSFW scenes (v13 through v17). Tag prompts with safe / sensitive / nsfw / explicit to steer output. For adults only. On cards with less VRAM than the model the components are offloaded to system RAM.",
+  "author": "WAI0731 (diffusers conversions by John6666, martineux, frankjoshua)",
+  "license": "Fair AI Public License 1.0-SD",
+  "category": "image",
+  "engine": "python_uv",
+  "hardware_requirements": {
+    "min_vram_gb": 8.0,
+    "min_ram_gb": 16.0,
+    "supported_accelerators": [
+      "cuda"
+    ]
+  },
+  "install": [
+    {
+      "step_type": "setup_venv",
+      "python_version": "3.11"
+    },
+    {
+      "step_type": "uv_pip_install",
+      "packages": [
+        "torch>=2.4.0",
+        "diffusers>=0.30.0",
+        "transformers>=4.45.0",
+        "accelerate>=0.34.0",
+        "sentencepiece",
+        "protobuf",
+        "fastapi",
+        "uvicorn",
+        "pydantic"
+      ]
+    },
+    {
+      "step_type": "hf_download",
+      "repo_id": "frankjoshua/waiIllustriousSDXL_v170",
+      "destination": "weights/model"
+    }
+  ],
+  "runtime": {
+    "archetype": "diffusers_pipeline",
+    "entrypoint": "diffusers_runner.py",
+    "arguments": [],
+    "transport": "loopback_http",
+    "health_endpoint": "/health",
+    "readiness_timeout_sec": 600
+  },
+  "ui": {
+    "title": "WAI-NSFW-Illustrious",
+    "description": "Anime characters (18+)",
+    "inputs": [
+      {
+        "name": "prompt",
+        "label": "Prompt",
+        "widget": "textarea",
+        "required": true,
+        "default": "masterpiece, best quality, 1girl, solo, silver hair, lemon tree, sunlight, looking at viewer"
+      },
+      {
+        "name": "negative_prompt",
+        "label": "Negative prompt",
+        "widget": "textarea",
+        "placeholder": "What to avoid, e.g. blurry, low quality, text",
+        "default": "worst quality, low quality, lowres, bad anatomy, bad hands, extra digits, watermark, signature"
+      },
+      {
+        "name": "aspect_ratio",
+        "label": "Aspect ratio",
+        "widget": "select",
+        "options": [
+          "1:1",
+          "16:9",
+          "9:16",
+          "4:3",
+          "3:4",
+          "3:2",
+          "2:3"
+        ],
+        "default": "1:1",
+        "grid_cols": 2
+      },
+      {
+        "name": "seed",
+        "label": "Seed",
+        "widget": "number",
+        "min": 0,
+        "max": 2147483647,
+        "step": 1,
+        "default": 42,
+        "grid_cols": 1
+      },
+      {
+        "name": "steps",
+        "label": "Inference steps",
+        "widget": "slider",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "default": 30,
+        "grid_cols": 2
+      },
+      {
+        "name": "guidance_scale",
+        "label": "Guidance",
+        "widget": "slider",
+        "min": 1.0,
+        "max": 15.0,
+        "step": 0.5,
+        "default": 6.0,
+        "grid_cols": 1
+      }
+    ],
+    "output": {
+      "type": "image",
+      "protocol": "ipc_stream"
+    }
+  },
+  "content_rating": "adult",
+  "variants": [
+    {
+      "id": "v13",
+      "name": "v13",
+      "description": "WAI-NSFW-Illustrious v13: classic crisp anime shading with strong Danbooru tag adherence.",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "diffusers>=0.30.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "sentencepiece",
+            "protobuf",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "John6666/wai-nsfw-illustrious-v130-sdxl",
+          "destination": "weights/model"
+        }
+      ]
+    },
+    {
+      "id": "v14",
+      "name": "v14",
+      "description": "WAI-NSFW-Illustrious v14: refined lighting, improved hands, and broader character coverage.",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "diffusers>=0.30.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "sentencepiece",
+            "protobuf",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "John6666/wai-nsfw-illustrious-sdxl-v140-sdxl",
+          "destination": "weights/model"
+        }
+      ]
+    },
+    {
+      "id": "v15",
+      "name": "v15",
+      "description": "WAI-NSFW-Illustrious v15: balanced anatomy, rich anime rendering, and widely tested LoRA compatibility.",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "diffusers>=0.30.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "sentencepiece",
+            "protobuf",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "John6666/wai-nsfw-illustrious-sdxl-v150-sdxl",
+          "destination": "weights/model"
+        }
+      ]
+    },
+    {
+      "id": "v16",
+      "name": "v16",
+      "description": "WAI-NSFW-Illustrious v16: sharper fine details, cleaner backgrounds, and stronger multi-character framing.",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "diffusers>=0.30.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "sentencepiece",
+            "protobuf",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "martineux/waiIllustriousSDXL_v160",
+          "destination": "weights/model"
+        }
+      ]
+    },
+    {
+      "id": "v17",
+      "name": "v17 (Latest)",
+      "description": "WAI-NSFW-Illustrious v17: newest release with upgraded shading, facial consistency, and prompt following.",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "diffusers>=0.30.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "sentencepiece",
+            "protobuf",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "frankjoshua/waiIllustriousSDXL_v170",
+          "destination": "weights/model"
+        }
+      ]
+    }
+  ]
+}

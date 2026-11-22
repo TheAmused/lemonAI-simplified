@@ -1,0 +1,852 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "definitions": {
+    "Accelerator": {
+      "enum": [
+        "cuda",
+        "rocm",
+        "metal",
+        "cpu"
+      ],
+      "type": "string"
+    },
+    "ContentRating": {
+      "enum": [
+        "general",
+        "adult"
+      ],
+      "type": "string"
+    },
+    "ContextWindowConfig": {
+      "additionalProperties": false,
+      "description": "Context window bounds declared by the model manifest (in tokens).",
+      "properties": {
+        "max_supported": {
+          "description": "Maximum context window (tokens) supported by the model architecture.",
+          "format": "uint32",
+          "maximum": 2097152.0,
+          "minimum": 256.0,
+          "type": "integer"
+        },
+        "recommended": {
+          "description": "Balanced default context window (tokens) passed to the server on launch.",
+          "format": "uint32",
+          "maximum": 2097152.0,
+          "minimum": 256.0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "max_supported",
+        "recommended"
+      ],
+      "type": "object"
+    },
+    "ExecutionEngine": {
+      "enum": [
+        "python_uv",
+        "standalone_binary"
+      ],
+      "type": "string"
+    },
+    "HardwareRequirements": {
+      "additionalProperties": false,
+      "properties": {
+        "min_ram_gb": {
+          "format": "double",
+          "minimum": 1.0,
+          "type": "number"
+        },
+        "min_vram_gb": {
+          "format": "double",
+          "minimum": 0.0,
+          "type": "number"
+        },
+        "supported_accelerators": {
+          "default": [
+            "cuda",
+            "cpu"
+          ],
+          "items": {
+            "$ref": "#/definitions/Accelerator"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "min_ram_gb",
+        "min_vram_gb"
+      ],
+      "type": "object"
+    },
+    "InstallStep": {
+      "additionalProperties": false,
+      "properties": {
+        "civitai_model_id": {
+          "format": "uint64",
+          "minimum": 0.0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "civitai_version_id": {
+          "format": "uint64",
+          "minimum": 0.0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "destination": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "extra_index_urls": {
+          "items": {
+            "pattern": "^https://[^\\s@/?#-][^\\s@/?#]*([/?#]\\S*)?$",
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "filename": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "packages": {
+          "items": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*(\\[[A-Za-z0-9._,-]+\\])?((===|==|!=|>=|<=|~=|<|>)[A-Za-z0-9.*+!_-]+(,(===|==|!=|>=|<=|~=|<|>)[A-Za-z0-9.*+!_-]+)*)?$",
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "python_version": {
+          "default": "3.11",
+          "pattern": "^\\d+(\\.\\d+){0,2}$",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "repo_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sha256": {
+          "pattern": "^[a-fA-F0-9]{64}$",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "step_type": {
+          "$ref": "#/definitions/StepType"
+        }
+      },
+      "required": [
+        "step_type"
+      ],
+      "type": "object"
+    },
+    "ModelFamily": {
+      "additionalProperties": false,
+      "description": "The family a manifest belongs to and its place in it.",
+      "properties": {
+        "id": {
+          "description": "Shared by every member, e.g. `gemma-4`.",
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[a-z0-9_-]+$",
+          "type": "string"
+        },
+        "name": {
+          "description": "Display name of the family, e.g. `Gemma 4`.",
+          "maxLength": 80,
+          "minLength": 1,
+          "type": "string"
+        },
+        "order": {
+          "default": 0,
+          "description": "Sort order inside the family (smallest first).",
+          "format": "uint32",
+          "maximum": 1000.0,
+          "minimum": 0.0,
+          "type": "integer"
+        },
+        "variant": {
+          "description": "This member's short label, e.g. `12B` or `Polski`.",
+          "maxLength": 40,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "variant"
+      ],
+      "type": "object"
+    },
+    "ModelVariant": {
+      "additionalProperties": false,
+      "properties": {
+        "context_window": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ContextWindowConfig"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "hardware_requirements": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/HardwareRequirements"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "id": {
+          "maxLength": 50,
+          "minLength": 1,
+          "pattern": "^[a-z0-9_-]+$",
+          "type": "string"
+        },
+        "install": {
+          "items": {
+            "$ref": "#/definitions/InstallStep"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "output_tokens": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/OutputTokensConfig"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "runtime": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RuntimeConfig"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "type": "object"
+    },
+    "OutputTokensConfig": {
+      "additionalProperties": false,
+      "description": "Output generation token bounds declared by the model manifest.",
+      "properties": {
+        "max_supported": {
+          "description": "Maximum single-turn output tokens supported by the model (never exceeds max context window).",
+          "format": "uint32",
+          "maximum": 2097152.0,
+          "minimum": 64.0,
+          "type": "integer"
+        },
+        "recommended": {
+          "description": "Practical default max output tokens per turn.",
+          "format": "uint32",
+          "maximum": 2097152.0,
+          "minimum": 64.0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "max_supported",
+        "recommended"
+      ],
+      "type": "object"
+    },
+    "RuntimeArchetype": {
+      "enum": [
+        "diffusers_pipeline",
+        "transformers_pipeline",
+        "audio_pipeline",
+        "llama_cpp_server"
+      ],
+      "type": "string"
+    },
+    "RuntimeConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "archetype": {
+          "$ref": "#/definitions/RuntimeArchetype"
+        },
+        "arguments": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "context_window": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ContextWindowConfig"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "entrypoint": {
+          "type": "string"
+        },
+        "health_endpoint": {
+          "default": "/health",
+          "pattern": "^/\\S*$",
+          "type": "string"
+        },
+        "output_tokens": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/OutputTokensConfig"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "readiness_timeout_sec": {
+          "default": 120,
+          "format": "uint64",
+          "maximum": 600.0,
+          "minimum": 5.0,
+          "type": "integer"
+        },
+        "transport": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/RuntimeTransport"
+            }
+          ],
+          "default": "loopback_http"
+        }
+      },
+      "required": [
+        "archetype",
+        "entrypoint"
+      ],
+      "type": "object"
+    },
+    "RuntimeTransport": {
+      "description": "How the app talks to the model server. Currently every runner is reached over authenticated loopback HTTP; `unix_domain_socket` is accepted for forward compatibility but not implemented by the launchers.",
+      "enum": [
+        "unix_domain_socket",
+        "loopback_http"
+      ],
+      "type": "string"
+    },
+    "StepType": {
+      "enum": [
+        "setup_venv",
+        "uv_pip_install",
+        "hf_download",
+        "civitai_download",
+        "copy_file"
+      ],
+      "type": "string"
+    },
+    "UICondition": {
+      "additionalProperties": false,
+      "description": "Conditional visibility rule: the field is shown only while the referenced field matches.",
+      "properties": {
+        "equals": true,
+        "field": {
+          "type": "string"
+        },
+        "in": {
+          "items": true,
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "not_equals": true
+      },
+      "required": [
+        "field"
+      ],
+      "type": "object"
+    },
+    "UIConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "columns": {
+          "description": "Number of layout columns (1 or 2).",
+          "format": "uint8",
+          "maximum": 2.0,
+          "minimum": 1.0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "inputs": {
+          "items": {
+            "$ref": "#/definitions/UIInputDefinition"
+          },
+          "type": "array"
+        },
+        "output": {
+          "$ref": "#/definitions/UIOutputDefinition"
+        },
+        "presets": {
+          "items": {
+            "$ref": "#/definitions/UIFormPreset"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "sections": {
+          "items": {
+            "$ref": "#/definitions/UISection"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "inputs",
+        "output",
+        "title"
+      ],
+      "type": "object"
+    },
+    "UIFormPreset": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "values": {
+          "additionalProperties": true,
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "values"
+      ],
+      "type": "object"
+    },
+    "UIInputDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "accept": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "default": true,
+        "depends_on": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/UICondition"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "grid_cols": {
+          "description": "Width in a 3-column grid (1 = one third ... 3 = full width).",
+          "format": "uint8",
+          "maximum": 3.0,
+          "minimum": 1.0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "label": {
+          "type": "string"
+        },
+        "max": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "min": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "name": {
+          "pattern": "^[a-zA-Z0-9_]+$",
+          "type": "string"
+        },
+        "options": {
+          "items": {
+            "$ref": "#/definitions/UIInputOption"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "placeholder": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "quick_chips": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "required": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "step": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "widget": {
+          "$ref": "#/definitions/UIWidgetType"
+        }
+      },
+      "required": [
+        "label",
+        "name",
+        "widget"
+      ],
+      "type": "object"
+    },
+    "UIInputOption": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "value": {
+              "$ref": "#/definitions/UIOptionValue"
+            }
+          },
+          "required": [
+            "label",
+            "value"
+          ],
+          "type": "object"
+        }
+      ],
+      "description": "A select/radio/checkbox option: either a plain string or a `{label, value}` pair whose value may be a string, number or boolean (so numeric/boolean values survive the round trip)."
+    },
+    "UIOptionValue": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "format": "double",
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        }
+      ],
+      "description": "Schema-only helper describing the allowed types of a labeled option's `value`."
+    },
+    "UIOutputDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "protocol": {
+          "$ref": "#/definitions/UIOutputProtocol"
+        },
+        "type": {
+          "$ref": "#/definitions/UIOutputType"
+        }
+      },
+      "required": [
+        "protocol",
+        "type"
+      ],
+      "type": "object"
+    },
+    "UIOutputProtocol": {
+      "enum": [
+        "ipc_stream",
+        "sse_stream",
+        "json_rpc"
+      ],
+      "type": "string"
+    },
+    "UIOutputType": {
+      "enum": [
+        "text",
+        "markdown",
+        "image",
+        "audio",
+        "json"
+      ],
+      "type": "string"
+    },
+    "UISection": {
+      "additionalProperties": false,
+      "properties": {
+        "default_open": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "input_names": {
+          "items": {
+            "type": "string"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "inputs": {
+          "items": {
+            "$ref": "#/definitions/UIInputDefinition"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "type": "object"
+    },
+    "UIWidgetType": {
+      "enum": [
+        "text",
+        "textarea",
+        "slider",
+        "switch",
+        "select",
+        "file_upload",
+        "number",
+        "color_picker",
+        "radio_group",
+        "checkbox_group",
+        "json_editor",
+        "tags_input",
+        "seed",
+        "dimensions"
+      ],
+      "type": "string"
+    }
+  },
+  "properties": {
+    "author": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "category": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "content_rating": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ContentRating"
+        }
+      ],
+      "description": "`adult` models (uncensored chat, NSFW image models) are hidden in the catalog unless the user turns on adult content in the app's settings."
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "engine": {
+      "$ref": "#/definitions/ExecutionEngine"
+    },
+    "family": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ModelFamily"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "The family this manifest was resolved from (set by [`ModelPackageManifest::resolve_variant`] on installed variants). Absent on stand-alone models and on the family manifest itself."
+    },
+    "hardware_requirements": {
+      "$ref": "#/definitions/HardwareRequirements"
+    },
+    "id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[a-z0-9_-]+$",
+      "type": "string"
+    },
+    "install": {
+      "items": {
+        "$ref": "#/definitions/InstallStep"
+      },
+      "type": "array"
+    },
+    "license": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "name": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "runtime": {
+      "$ref": "#/definitions/RuntimeConfig"
+    },
+    "schema_version": {
+      "pattern": "^1\\.0\\.0$",
+      "type": "string"
+    },
+    "ui": {
+      "$ref": "#/definitions/UIConfig"
+    },
+    "variants": {
+      "description": "Sizes or flavours of one model in a single manifest (Gemma 4 E2B ... 31B). Installing picks one; [`ModelPackageManifest::resolve_variant`] turns it into a concrete manifest.",
+      "items": {
+        "$ref": "#/definitions/ModelVariant"
+      },
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "engine",
+    "hardware_requirements",
+    "id",
+    "install",
+    "name",
+    "runtime",
+    "schema_version",
+    "ui",
+    "version"
+  ],
+  "title": "ModelPackageManifest",
+  "type": "object"
+}

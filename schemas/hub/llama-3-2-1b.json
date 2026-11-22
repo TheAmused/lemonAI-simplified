@@ -1,0 +1,93 @@
+{
+  "schema_version": "1.0.0",
+  "id": "llama-3-2-1b",
+  "name": "Llama 3.2 1B Instruct",
+  "version": "1.0.0",
+  "description": "Lightweight multilingual instruction-tuned LLM (Q4_K_M GGUF) running on llama.cpp.",
+  "author": "Meta AI (GGUF by bartowski)",
+  "license": "Llama 3.2 Community License",
+  "category": "llm",
+  "engine": "standalone_binary",
+  "hardware_requirements": {
+    "min_vram_gb": 2.5,
+    "min_ram_gb": 4.0,
+    "supported_accelerators": [
+      "cuda",
+      "rocm",
+      "metal",
+      "cpu"
+    ]
+  },
+  "install": [
+    {
+      "step_type": "hf_download",
+      "repo_id": "bartowski/Llama-3.2-1B-Instruct-GGUF",
+      "filename": "Llama-3.2-1B-Instruct-Q4_K_M.gguf",
+      "destination": "weights/model.gguf"
+    }
+  ],
+  "runtime": {
+    "archetype": "llama_cpp_server",
+    "entrypoint": "llama-server",
+    "arguments": [
+      "--ctx-size",
+      "4096",
+      "--n-gpu-layers",
+      "99"
+    ],
+    "transport": "loopback_http",
+    "health_endpoint": "/health",
+    "readiness_timeout_sec": 120,
+    "context_window": {
+      "recommended": 4096,
+      "max_supported": 131072
+    },
+    "output_tokens": {
+      "recommended": 1024,
+      "max_supported": 131072
+    }
+  },
+  "ui": {
+    "title": "Llama 3.2 1B Instruct",
+    "description": "Fast text generation and dialogue",
+    "inputs": [
+      {
+        "name": "prompt",
+        "label": "Prompt",
+        "widget": "textarea",
+        "required": true,
+        "default": "Explain why Rust memory safety matters in three concise points."
+      },
+      {
+        "name": "system_prompt",
+        "label": "System prompt",
+        "widget": "textarea",
+        "placeholder": "Optional instructions for the assistant"
+      },
+      {
+        "name": "temperature",
+        "label": "Temperature",
+        "widget": "slider",
+        "min": 0.0,
+        "max": 1.5,
+        "step": 0.05,
+        "default": 0.7,
+        "grid_cols": 2
+      },
+      {
+        "name": "max_tokens",
+        "label": "Max tokens",
+        "widget": "number",
+        "min": 64,
+        "max": 4096,
+        "step": 64,
+        "default": 512,
+        "grid_cols": 1
+      }
+    ],
+    "output": {
+      "type": "markdown",
+      "protocol": "ipc_stream"
+    }
+  }
+}

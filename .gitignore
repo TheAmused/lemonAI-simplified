@@ -1,0 +1,29 @@
+# Rust build artifacts
+/target
+/apps/desktop/src-tauri/gen/
+
+# Node dependencies and build outputs
+node_modules/
+dist/
+
+# Python virtual environment and bytecode
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*.db
+
+# Operating System files
+.DS_Store
+Thumbs.db
+*.tsbuildinfo
+
+# Local secrets
+.env
+
+# Updater signing key (build-windows.ps1 -Installer); back it up, never commit it
+.secrets/
+
+# Scratch exports
+Claude outputs/

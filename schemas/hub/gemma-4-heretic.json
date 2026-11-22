@@ -1,0 +1,270 @@
+{
+  "schema_version": "1.0.0",
+  "id": "gemma-4-heretic",
+  "name": "Gemma 4 Heretic",
+  "version": "1.0.0",
+  "description": "Google's Gemma 4 with refusals removed (abliterated with Heretic by llmfan46): answers requests the original declines. Uncensored — for adults only.",
+  "author": "llmfan46 (based on Google DeepMind Gemma 4)",
+  "license": "Gemma 4 license (Apache-2.0)",
+  "category": "llm",
+  "content_rating": "adult",
+  "engine": "standalone_binary",
+  "hardware_requirements": {
+    "min_vram_gb": 7.5,
+    "min_ram_gb": 10.0,
+    "supported_accelerators": [
+      "cuda",
+      "rocm",
+      "metal",
+      "cpu"
+    ]
+  },
+  "install": [
+    {
+      "step_type": "hf_download",
+      "repo_id": "llmfan46/gemma-4-E4B-it-uncensored-heretic-GGUF",
+      "filename": "gemma-4-E4B-it-uncensored-heretic-Q4_K_M.gguf",
+      "destination": "weights/model.gguf",
+      "sha256": "1bdd107c87e30ce77cbe508ba223889ce68dea1a1b55177bf214a202adedf48c"
+    },
+    {
+      "step_type": "hf_download",
+      "repo_id": "llmfan46/gemma-4-E4B-it-uncensored-heretic-GGUF",
+      "filename": "gemma-4-E4B-it-mmproj-BF16.gguf",
+      "destination": "weights/mmproj.gguf",
+      "sha256": "ffa64aebf7144bbadd5a1e143b77794d88e76a81cc0168d91de0770eb49e88e0"
+    }
+  ],
+  "runtime": {
+    "archetype": "llama_cpp_server",
+    "entrypoint": "llama-server",
+    "arguments": [
+      "--ctx-size",
+      "8192",
+      "--parallel",
+      "1",
+      "--temp",
+      "1.0",
+      "--top-p",
+      "0.95",
+      "--top-k",
+      "64"
+    ],
+    "transport": "loopback_http",
+    "health_endpoint": "/health",
+    "readiness_timeout_sec": 300,
+    "context_window": {
+      "recommended": 8192,
+      "max_supported": 131072
+    },
+    "output_tokens": {
+      "recommended": 2048,
+      "max_supported": 131072
+    }
+  },
+  "ui": {
+    "title": "Gemma 4 Heretic",
+    "description": "Uncensored chat (18+)",
+    "inputs": [
+      {
+        "name": "prompt",
+        "label": "Prompt",
+        "widget": "textarea",
+        "required": true,
+        "default": "Explain the difference between a process and a thread in five sentences."
+      },
+      {
+        "name": "system_prompt",
+        "label": "System prompt",
+        "widget": "textarea",
+        "placeholder": "Optional instructions for the assistant"
+      },
+      {
+        "name": "thinking",
+        "label": "Thinking",
+        "widget": "switch",
+        "default": false,
+        "description": "Let the model reason before it answers (slower, uses part of the output budget)"
+      },
+      {
+        "name": "temperature",
+        "label": "Temperature",
+        "widget": "slider",
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.05,
+        "default": 1.0,
+        "grid_cols": 2
+      },
+      {
+        "name": "max_tokens",
+        "label": "Max tokens",
+        "widget": "number",
+        "min": 64,
+        "max": 8192,
+        "step": 64,
+        "default": 2048,
+        "grid_cols": 1
+      }
+    ],
+    "output": {
+      "type": "markdown",
+      "protocol": "ipc_stream"
+    }
+  },
+  "variants": [
+    {
+      "id": "e2b",
+      "name": "E2B",
+      "description": "Gemma 4 E2B Instruct with image input (Q4_K_M GGUF on llama.cpp). Uncensored: refusals were removed with Heretic (automatic abliteration), so it answers requests the original model declines. For adults; you are responsible for how you use it. Layers that do not fit the free VRAM run on the CPU (slower).",
+      "hardware_requirements": {
+        "min_vram_gb": 5.5,
+        "min_ram_gb": 8.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "llmfan46/gemma-4-E2B-it-ultra-uncensored-heretic-GGUF",
+          "filename": "gemma-4-E2B-it-ultra-uncensored-heretic-Q4_K_M.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "b458a896b652de933a587a660c21a4b2516f936934db328ae44bbad7a4518ac5"
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "llmfan46/gemma-4-E2B-it-ultra-uncensored-heretic-GGUF",
+          "filename": "gemma-4-E2B-it-mmproj-BF16.gguf",
+          "destination": "weights/mmproj.gguf",
+          "sha256": "d460bb51ce5115232a723a7366694c8ee70d8aa8f60159d182a1da0777d10db3"
+        }
+      ]
+    },
+    {
+      "id": "e4b",
+      "name": "E4B",
+      "description": "Gemma 4 E4B Instruct with image input (Q4_K_M GGUF on llama.cpp). Uncensored: refusals were removed with Heretic (automatic abliteration), so it answers requests the original model declines. For adults; you are responsible for how you use it. Layers that do not fit the free VRAM run on the CPU (slower)."
+    },
+    {
+      "id": "12b",
+      "name": "12B",
+      "description": "Gemma 4 12B Instruct with image input (Q4_K_M GGUF on llama.cpp). Uncensored: refusals were removed with Heretic (automatic abliteration), so it answers requests the original model declines. For adults; you are responsible for how you use it. Layers that do not fit the free VRAM run on the CPU (slower).",
+      "context_window": {
+        "recommended": 8192,
+        "max_supported": 262144
+      },
+      "output_tokens": {
+        "recommended": 4096,
+        "max_supported": 262144
+      },
+      "hardware_requirements": {
+        "min_vram_gb": 10.0,
+        "min_ram_gb": 13.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "llmfan46/gemma-4-12B-it-uncensored-heretic-GGUF",
+          "filename": "gemma-4-12B-it-uncensored-heretic-Q4_K_M.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "0930ee39b491bfef38c2d8d843576672648b2b0460ff8bd2870a35d4f50e6735"
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "llmfan46/gemma-4-12B-it-uncensored-heretic-GGUF",
+          "filename": "gemma-4-12B-it-uncensored-heretic-mmproj-BF16.gguf",
+          "destination": "weights/mmproj.gguf",
+          "sha256": "260bf379fb313557642b51f55699530cf76d3b76555ca84b7ac7434873512cef"
+        }
+      ]
+    },
+    {
+      "id": "26b-a4b",
+      "name": "26B A4B",
+      "description": "Gemma 4 26B A4B Instruct with image input (Q4_K_M GGUF on llama.cpp). Uncensored: refusals were removed with Heretic (automatic abliteration), so it answers requests the original model declines. For adults; you are responsible for how you use it. Layers that do not fit the free VRAM run on the CPU (slower).",
+      "context_window": {
+        "recommended": 8192,
+        "max_supported": 262144
+      },
+      "output_tokens": {
+        "recommended": 4096,
+        "max_supported": 262144
+      },
+      "hardware_requirements": {
+        "min_vram_gb": 19.0,
+        "min_ram_gb": 25.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "llmfan46/gemma-4-26B-A4B-it-uncensored-heretic-GGUF",
+          "filename": "gemma-4-26B-A4B-it-uncensored-heretic-Q4_K_M.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "11e66043f0b41df1ac79a67abd219b10ff9a90e39fc26bf9cf929f25bbbef647"
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "llmfan46/gemma-4-26B-A4B-it-uncensored-heretic-GGUF",
+          "filename": "gemma-4-26B-A4B-it-mmproj-BF16.gguf",
+          "destination": "weights/mmproj.gguf",
+          "sha256": "b3ee6c97d5a5bb1ae9eb93bf14c1d1b51a0179a45ac1076b195931814c759e1e"
+        }
+      ]
+    },
+    {
+      "id": "31b",
+      "name": "31B",
+      "description": "Gemma 4 31B Instruct with image input (Q4_K_M GGUF on llama.cpp). Uncensored: refusals were removed with Heretic (automatic abliteration), so it answers requests the original model declines. For adults; you are responsible for how you use it. Layers that do not fit the free VRAM run on the CPU (slower).",
+      "context_window": {
+        "recommended": 8192,
+        "max_supported": 262144
+      },
+      "output_tokens": {
+        "recommended": 4096,
+        "max_supported": 262144
+      },
+      "hardware_requirements": {
+        "min_vram_gb": 21.0,
+        "min_ram_gb": 28.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "llmfan46/gemma-4-31B-it-uncensored-heretic-GGUF",
+          "filename": "gemma-4-31B-it-uncensored-heretic-Q4_K_M.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "7c65a35e7c4e53cba6c5e02cc9eeb850eb4251f4d9ad120c2caa6de23c5a6395"
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "llmfan46/gemma-4-31B-it-uncensored-heretic-GGUF",
+          "filename": "gemma-4-31B-it-mmproj-BF16.gguf",
+          "destination": "weights/mmproj.gguf",
+          "sha256": "21487ff26d08f7ddd1d654d3bbfc1ae1020aab3119f5bf654742ce4697732e4e"
+        }
+      ]
+    }
+  ]
+}

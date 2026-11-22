@@ -1,0 +1,183 @@
+{
+  "schema_version": "1.0.0",
+  "id": "cyberrealistic-xl",
+  "name": "CyberRealistic XL",
+  "version": "1.0.0",
+  "description": "Cyberdelia's CyberRealistic XL family (v5.8, v7.0): photorealistic SDXL checkpoints tuned for lifelike portraits, skin textures, and studio lighting at 1024 px. On cards with less VRAM than the model the components are offloaded to system RAM.",
+  "author": "Cyberdelia (diffusers conversions by John6666)",
+  "license": "CreativeML Open RAIL++-M",
+  "category": "image",
+  "engine": "python_uv",
+  "hardware_requirements": {
+    "min_vram_gb": 8.0,
+    "min_ram_gb": 16.0,
+    "supported_accelerators": [
+      "cuda"
+    ]
+  },
+  "install": [
+    {
+      "step_type": "setup_venv",
+      "python_version": "3.11"
+    },
+    {
+      "step_type": "uv_pip_install",
+      "packages": [
+        "torch>=2.4.0",
+        "diffusers>=0.30.0",
+        "transformers>=4.45.0",
+        "accelerate>=0.34.0",
+        "sentencepiece",
+        "protobuf",
+        "fastapi",
+        "uvicorn",
+        "pydantic"
+      ]
+    },
+    {
+      "step_type": "hf_download",
+      "repo_id": "John6666/cyberrealistic-xl-v70-sdxl",
+      "destination": "weights/model"
+    }
+  ],
+  "runtime": {
+    "archetype": "diffusers_pipeline",
+    "entrypoint": "diffusers_runner.py",
+    "arguments": [],
+    "transport": "loopback_http",
+    "health_endpoint": "/health",
+    "readiness_timeout_sec": 600
+  },
+  "ui": {
+    "title": "CyberRealistic XL",
+    "description": "Lifelike portraits and studio photos",
+    "inputs": [
+      {
+        "name": "prompt",
+        "label": "Prompt",
+        "widget": "textarea",
+        "required": true,
+        "default": "Close-up editorial portrait in soft window light, 85 mm lens, natural skin texture, shallow depth of field"
+      },
+      {
+        "name": "negative_prompt",
+        "label": "Negative prompt",
+        "widget": "textarea",
+        "placeholder": "What to avoid, e.g. cartoon, plastic skin, blurry",
+        "default": "cartoon, anime, 3d render, plastic skin, blurry, low quality, watermark, signature"
+      },
+      {
+        "name": "aspect_ratio",
+        "label": "Aspect ratio",
+        "widget": "select",
+        "options": [
+          "1:1",
+          "16:9",
+          "9:16",
+          "4:3",
+          "3:4",
+          "3:2",
+          "2:3"
+        ],
+        "default": "1:1",
+        "grid_cols": 2
+      },
+      {
+        "name": "seed",
+        "label": "Seed",
+        "widget": "number",
+        "min": 0,
+        "max": 2147483647,
+        "step": 1,
+        "default": 42,
+        "grid_cols": 1
+      },
+      {
+        "name": "steps",
+        "label": "Inference steps",
+        "widget": "slider",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "default": 30,
+        "grid_cols": 2
+      },
+      {
+        "name": "guidance_scale",
+        "label": "Guidance",
+        "widget": "slider",
+        "min": 1.0,
+        "max": 15.0,
+        "step": 0.5,
+        "default": 5.0,
+        "grid_cols": 1
+      }
+    ],
+    "output": {
+      "type": "image",
+      "protocol": "ipc_stream"
+    }
+  },
+  "variants": [
+    {
+      "id": "v5-8",
+      "name": "v5.8",
+      "description": "CyberRealistic XL v5.8: warm photographic color palette and consistent portrait framing.",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "diffusers>=0.30.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "sentencepiece",
+            "protobuf",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "John6666/cyberrealistic-xl-v58-sdxl",
+          "destination": "weights/model"
+        }
+      ]
+    },
+    {
+      "id": "v7-0",
+      "name": "v7.0 (Latest)",
+      "description": "CyberRealistic XL v7.0: newest release with sharper micro-details, natural skin, and better hands.",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "diffusers>=0.30.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "sentencepiece",
+            "protobuf",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "John6666/cyberrealistic-xl-v70-sdxl",
+          "destination": "weights/model"
+        }
+      ]
+    }
+  ]
+}

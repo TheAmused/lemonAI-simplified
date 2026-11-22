@@ -1,0 +1,64 @@
+{
+  "$comment": "What a model manifest may ask the runtime to install or pass to a server. Read by manifest-engine (Rust, compiled in), the Hub backend and the frontend manifest builder. Manifests cannot add package indexes: Python packages come from PyPI plus the app-selected PyTorch index only.",
+  "archetypes": {
+    "transformers_pipeline": {
+      "required_packages": ["torch", "transformers", "accelerate", "safetensors", "fastapi", "uvicorn", "pydantic"],
+      "allowed_packages": [
+        "torch", "transformers", "accelerate", "safetensors", "tokenizers", "huggingface-hub",
+        "sentencepiece", "protobuf", "tiktoken", "einops", "numpy",
+        "fastapi", "uvicorn", "pydantic"
+      ]
+    },
+    "diffusers_pipeline": {
+      "required_packages": ["torch", "diffusers", "transformers", "accelerate", "safetensors", "sentencepiece", "protobuf", "pillow", "fastapi", "uvicorn", "pydantic"],
+      "allowed_packages": [
+        "torch", "diffusers", "transformers", "accelerate", "safetensors", "tokenizers", "huggingface-hub",
+        "sentencepiece", "protobuf", "pillow", "numpy", "einops",
+        "fastapi", "uvicorn", "pydantic"
+      ]
+    },
+    "audio_pipeline": {
+      "required_packages": ["torch", "torchaudio", "transformers", "accelerate", "safetensors", "numpy", "soundfile", "fastapi", "uvicorn", "pydantic"],
+      "allowed_packages": [
+        "torch", "torchaudio", "transformers", "accelerate", "safetensors", "tokenizers", "huggingface-hub",
+        "numpy", "soundfile", "sentencepiece", "protobuf",
+        "fastapi", "uvicorn", "pydantic"
+      ]
+    },
+    "llama_cpp_server": {
+      "required_packages": [],
+      "allowed_packages": []
+    }
+  },
+  "llama_server_flags": {
+    "-c": "value", "--ctx-size": "value",
+    "-ngl": "value", "--n-gpu-layers": "value", "--gpu-layers": "value",
+    "-t": "value", "--threads": "value",
+    "-tb": "value", "--threads-batch": "value",
+    "-b": "value", "--batch-size": "value",
+    "-ub": "value", "--ubatch-size": "value",
+    "-np": "value", "--parallel": "value",
+    "-n": "value", "--n-predict": "value",
+    "--keep": "value",
+    "-fa": "optional_value", "--flash-attn": "optional_value",
+    "-cb": "switch", "--cont-batching": "switch", "--no-cont-batching": "switch",
+    "--mlock": "switch", "--no-mmap": "switch",
+    "-ctk": "value", "--cache-type-k": "value",
+    "-ctv": "value", "--cache-type-v": "value",
+    "--rope-scaling": "value", "--rope-freq-base": "value", "--rope-freq-scale": "value",
+    "-sm": "value", "--split-mode": "value",
+    "-ts": "value", "--tensor-split": "value",
+    "-mg": "value", "--main-gpu": "value",
+    "--temp": "value", "--top-k": "value", "--top-p": "value", "--min-p": "value",
+    "--repeat-penalty": "value", "--repeat-last-n": "value",
+    "--jinja": "switch", "--chat-template": "value", "--reasoning-format": "value",
+    "-rea": "value", "--reasoning": "value", "--reasoning-budget": "value",
+    "-fit": "optional_value", "--fit": "optional_value",
+    "-fitt": "value", "--fit-target": "value", "-fitc": "value", "--fit-ctx": "value",
+    "--context-shift": "switch", "--no-context-shift": "switch",
+    "--cache-reuse": "value",
+    "--defrag-thold": "value",
+    "--no-webui": "switch"
+  },
+  "max_runtime_arguments": 64
+}

@@ -1,0 +1,183 @@
+{
+  "schema_version": "1.0.0",
+  "id": "animagine-xl",
+  "name": "Animagine XL",
+  "version": "1.0.0",
+  "description": "Cagliostro Research Lab's Animagine XL anime SDXL family (3.1 and 4.0): high-detail anime illustrations with clean anatomy and rich lighting. On cards with less VRAM than the model the components are offloaded to system RAM.",
+  "author": "Cagliostro Research Lab",
+  "license": "Fair AI Public License 1.0-SD",
+  "category": "image",
+  "engine": "python_uv",
+  "hardware_requirements": {
+    "min_vram_gb": 8.0,
+    "min_ram_gb": 16.0,
+    "supported_accelerators": [
+      "cuda"
+    ]
+  },
+  "install": [
+    {
+      "step_type": "setup_venv",
+      "python_version": "3.11"
+    },
+    {
+      "step_type": "uv_pip_install",
+      "packages": [
+        "torch>=2.4.0",
+        "diffusers>=0.30.0",
+        "transformers>=4.45.0",
+        "accelerate>=0.34.0",
+        "sentencepiece",
+        "protobuf",
+        "fastapi",
+        "uvicorn",
+        "pydantic"
+      ]
+    },
+    {
+      "step_type": "hf_download",
+      "repo_id": "cagliostrolab/animagine-xl-4.0",
+      "destination": "weights/model"
+    }
+  ],
+  "runtime": {
+    "archetype": "diffusers_pipeline",
+    "entrypoint": "diffusers_runner.py",
+    "arguments": [],
+    "transport": "loopback_http",
+    "health_endpoint": "/health",
+    "readiness_timeout_sec": 600
+  },
+  "ui": {
+    "title": "Animagine XL",
+    "description": "High-detail anime illustrations",
+    "inputs": [
+      {
+        "name": "prompt",
+        "label": "Prompt",
+        "widget": "textarea",
+        "required": true,
+        "default": "1girl, solo, silver hair, golden hour, rooftop overlooking city skyline, masterpiece, high score, great score, absurdres"
+      },
+      {
+        "name": "negative_prompt",
+        "label": "Negative prompt",
+        "widget": "textarea",
+        "placeholder": "What to avoid, e.g. lowres, bad anatomy, text",
+        "default": "lowres, bad anatomy, bad hands, text, error, missing finger, extra digits, fewer digits, cropped, worst quality, low quality, watermark"
+      },
+      {
+        "name": "aspect_ratio",
+        "label": "Aspect ratio",
+        "widget": "select",
+        "options": [
+          "1:1",
+          "16:9",
+          "9:16",
+          "4:3",
+          "3:4",
+          "3:2",
+          "2:3"
+        ],
+        "default": "1:1",
+        "grid_cols": 2
+      },
+      {
+        "name": "seed",
+        "label": "Seed",
+        "widget": "number",
+        "min": 0,
+        "max": 2147483647,
+        "step": 1,
+        "default": 42,
+        "grid_cols": 1
+      },
+      {
+        "name": "steps",
+        "label": "Inference steps",
+        "widget": "slider",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "default": 28,
+        "grid_cols": 2
+      },
+      {
+        "name": "guidance_scale",
+        "label": "Guidance",
+        "widget": "slider",
+        "min": 1.0,
+        "max": 15.0,
+        "step": 0.5,
+        "default": 5.5,
+        "grid_cols": 1
+      }
+    ],
+    "output": {
+      "type": "image",
+      "protocol": "ipc_stream"
+    }
+  },
+  "variants": [
+    {
+      "id": "3-1",
+      "name": "3.1",
+      "description": "Animagine XL 3.1: classic vibrant anime style with broad character tag support.",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "diffusers>=0.30.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "sentencepiece",
+            "protobuf",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "cagliostrolab/animagine-xl-3.1",
+          "destination": "weights/model"
+        }
+      ]
+    },
+    {
+      "id": "4-0",
+      "name": "4.0 (Latest)",
+      "description": "Animagine XL 4.0: newest generation with upgraded linework, anatomy, and natural-language understanding.",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "diffusers>=0.30.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "sentencepiece",
+            "protobuf",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "cagliostrolab/animagine-xl-4.0",
+          "destination": "weights/model"
+        }
+      ]
+    }
+  ]
+}

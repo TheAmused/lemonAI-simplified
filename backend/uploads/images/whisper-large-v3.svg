@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" rx="24" fill="url(#grad)" />
+  <circle cx="700" cy="80" r="140" fill="#ffffff" fill-opacity="0.06" />
+  <circle cx="650" cy="340" r="100" fill="#ffffff" fill-opacity="0.04" />
+  <text x="56" y="170" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="800" fill="#ffffff">Whisper Large v3</text>
+  <text x="56" y="225" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="20" fill="#e2e8f0">Speech to text in 90+ languages</text>
+  <rect x="56" y="280" width="160" height="38" rx="19" fill="#ffffff" fill-opacity="0.18" stroke="#ffffff" stroke-opacity="0.3" />
+  <text x="136" y="304" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#ffffff">LemonAI Curated</text>
+</svg>

@@ -1,0 +1,212 @@
+{
+  "$comment": "The helper programs LemonAI downloads for itself: which release, from where, and the SHA-256 every archive must have. Compiled into the desktop app (lemon-core); nothing here can be changed by a manifest or by the Hub. For each component the first variant that matches this machine is installed, so list the most specific ones first and a CPU build last. To move to a newer release, change the version, the URLs, the sizes and the hashes together (the GitHub releases API lists each asset's sha256 digest).",
+  "components": {
+    "uv": {
+      "version": "0.13.8",
+      "executable": "uv",
+      "variants": [
+        {
+          "id": "windows-x64",
+          "os": "windows",
+          "arch": "x86_64",
+          "archives": [
+            {
+              "url": "https://github.com/astral-sh/uv/releases/download/0.13.8/uv-x86_64-pc-windows-msvc.zip",
+              "sha256": "529e78a9cec6cd7e3e014f7ecd8bda0c113969d4ed0f2efeedb85c30943325b8",
+              "size": 15529884
+            }
+          ]
+        },
+        {
+          "id": "windows-arm64",
+          "os": "windows",
+          "arch": "aarch64",
+          "archives": [
+            {
+              "url": "https://github.com/astral-sh/uv/releases/download/0.13.8/uv-aarch64-pc-windows-msvc.zip",
+              "sha256": "59e6d919bed1f72035e622a7c930058f08a8931c4c78ceaf9f56e7fb74dd2c48",
+              "size": 15590791
+            }
+          ]
+        },
+        {
+          "id": "linux-x64",
+          "os": "linux",
+          "arch": "x86_64",
+          "archives": [
+            {
+              "url": "https://github.com/astral-sh/uv/releases/download/0.13.8/uv-x86_64-unknown-linux-gnu.tar.gz",
+              "sha256": "5acfd9177cfecf0bf87578f059728215ccc884388988f55f7a65041b57387d91",
+              "size": 16855069
+            }
+          ]
+        },
+        {
+          "id": "linux-arm64",
+          "os": "linux",
+          "arch": "aarch64",
+          "archives": [
+            {
+              "url": "https://github.com/astral-sh/uv/releases/download/0.13.8/uv-aarch64-unknown-linux-gnu.tar.gz",
+              "sha256": "74f2f5c6024d397481db228db8fc25eed420db192243f88438c118e7e013e585",
+              "size": 16065638
+            }
+          ]
+        },
+        {
+          "id": "macos-arm64",
+          "os": "macos",
+          "arch": "aarch64",
+          "archives": [
+            {
+              "url": "https://github.com/astral-sh/uv/releases/download/0.13.8/uv-aarch64-apple-darwin.tar.gz",
+              "sha256": "6b71028a6b904f2ae3340ef52e595512de807d06c0a20eaef2f692581b246558",
+              "size": 14375545
+            }
+          ]
+        },
+        {
+          "id": "macos-x64",
+          "os": "macos",
+          "arch": "x86_64",
+          "archives": [
+            {
+              "url": "https://github.com/astral-sh/uv/releases/download/0.13.8/uv-x86_64-apple-darwin.tar.gz",
+              "sha256": "a04c2ffeac28b2003a2c13caf538ab425fcd7def3e4a41571f4a8fb370a66af3",
+              "size": 17208261
+            }
+          ]
+        }
+      ]
+    },
+    "llama-server": {
+      "version": "b12405",
+      "executable": "llama-server",
+      "variants": [
+        {
+          "id": "windows-x64-cuda12",
+          "os": "windows",
+          "arch": "x86_64",
+          "accelerator": "cuda",
+          "min_nvidia_driver": "551.61",
+          "archives": [
+            {
+              "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12405/llama-b12405-bin-win-cuda-12.4-x64.zip",
+              "sha256": "f069a0ecf89a89be67c0af097b9278baa8d2629becaf6c897defff0059dd70d2",
+              "size": 319621437
+            },
+            {
+              "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12405/cudart-llama-bin-win-cuda-12.4-x64.zip",
+              "sha256": "8c79a9b226de4b3cacfd1f83d24f962d0773be79f1e7b75c6af4ded7e32ae1d6",
+              "size": 391443627
+            }
+          ]
+        },
+        {
+          "id": "windows-x64-cpu",
+          "os": "windows",
+          "arch": "x86_64",
+          "archives": [
+            {
+              "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12405/llama-b12405-bin-win-cpu-x64.zip",
+              "sha256": "6a382b6e7fd07a6fe4d0d888dcce7e1f10471b53554e0f47631f780c8edf51e9",
+              "size": 25126814
+            }
+          ]
+        },
+        {
+          "id": "windows-arm64-cpu",
+          "os": "windows",
+          "arch": "aarch64",
+          "archives": [
+            {
+              "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12405/llama-b12405-bin-win-cpu-arm64.zip",
+              "sha256": "d3e75f05fc2e7d319cc87c8781733d6d104ba65c8d679f144c997b70d674d1dc",
+              "size": 13468227
+            }
+          ]
+        },
+        {
+          "id": "linux-x64-cuda12",
+          "os": "linux",
+          "arch": "x86_64",
+          "accelerator": "cuda",
+          "min_nvidia_driver": "570.26",
+          "archives": [
+            {
+              "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12405/llama-b12405-bin-ubuntu-cuda-12.8-x64.tar.gz",
+              "sha256": "bf9f048919f027f19490d41c180970d23862f46e0b8784445f21f1bf2a99f6c5",
+              "size": 199619236
+            },
+            {
+              "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12405/cudart-llama-b12405-bin-ubuntu-cuda-12.8-x64.tar.gz",
+              "sha256": "a28db0b09e3cc3a6558963680197204b45ebb8fa4dba25fbf349bb3398ce7740",
+              "size": 594376842
+            }
+          ]
+        },
+        {
+          "id": "linux-x64-vulkan",
+          "os": "linux",
+          "arch": "x86_64",
+          "accelerator": "rocm",
+          "archives": [
+            {
+              "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12405/llama-b12405-bin-ubuntu-vulkan-x64.tar.gz",
+              "sha256": "94d0d052fb1682c1f58c22b65fff9afbfa896c18b7d6bc3802e240fae3023206",
+              "size": 36266950
+            }
+          ]
+        },
+        {
+          "id": "linux-x64-cpu",
+          "os": "linux",
+          "arch": "x86_64",
+          "archives": [
+            {
+              "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12405/llama-b12405-bin-ubuntu-x64.tar.gz",
+              "sha256": "deea31e01fe06beb93c61c3113f6bfb56f825651aa1fde432f8745a05e426bf4",
+              "size": 23339699
+            }
+          ]
+        },
+        {
+          "id": "linux-arm64-cpu",
+          "os": "linux",
+          "arch": "aarch64",
+          "archives": [
+            {
+              "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12405/llama-b12405-bin-ubuntu-arm64.tar.gz",
+              "sha256": "6771abf69d74305be30e9b669a34e5de6bfbbe0d6e49c6f239ac1251b5e0d462",
+              "size": 18978424
+            }
+          ]
+        },
+        {
+          "id": "macos-arm64-metal",
+          "os": "macos",
+          "arch": "aarch64",
+          "archives": [
+            {
+              "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12405/llama-b12405-bin-macos-arm64.tar.gz",
+              "sha256": "12511acba0e0e77ee717c07d1643992e3dd2bed5ee79c40817280b33f90760fe",
+              "size": 16925932
+            }
+          ]
+        },
+        {
+          "id": "macos-x64",
+          "os": "macos",
+          "arch": "x86_64",
+          "archives": [
+            {
+              "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12405/llama-b12405-bin-macos-x64.tar.gz",
+              "sha256": "f2e56f47f225bb48dfbcc58f3d657c2c0429372eb28b15a8df4136d184715756",
+              "size": 12671731
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

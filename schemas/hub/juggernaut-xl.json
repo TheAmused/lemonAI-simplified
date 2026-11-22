@@ -1,0 +1,243 @@
+{
+  "schema_version": "1.0.0",
+  "id": "juggernaut-xl",
+  "name": "Juggernaut XL",
+  "version": "1.0.0",
+  "description": "RunDiffusion's Juggernaut XL family (v9, Lightning, X v10, XI v11): flagship SDXL fine-tunes for photorealistic portraits, products, and cinematic scenes at 1024 px. On cards with less VRAM than the model the components are offloaded to system RAM.",
+  "author": "RunDiffusion / KandooAI",
+  "license": "CreativeML Open RAIL-M",
+  "category": "image",
+  "engine": "python_uv",
+  "hardware_requirements": {
+    "min_vram_gb": 8.0,
+    "min_ram_gb": 16.0,
+    "supported_accelerators": [
+      "cuda"
+    ]
+  },
+  "install": [
+    {
+      "step_type": "setup_venv",
+      "python_version": "3.11"
+    },
+    {
+      "step_type": "uv_pip_install",
+      "packages": [
+        "torch>=2.4.0",
+        "diffusers>=0.30.0",
+        "transformers>=4.45.0",
+        "accelerate>=0.34.0",
+        "sentencepiece",
+        "protobuf",
+        "fastapi",
+        "uvicorn",
+        "pydantic"
+      ]
+    },
+    {
+      "step_type": "hf_download",
+      "repo_id": "RunDiffusion/Juggernaut-XI-v11",
+      "destination": "weights/model"
+    }
+  ],
+  "runtime": {
+    "archetype": "diffusers_pipeline",
+    "entrypoint": "diffusers_runner.py",
+    "arguments": [],
+    "transport": "loopback_http",
+    "health_endpoint": "/health",
+    "readiness_timeout_sec": 600
+  },
+  "ui": {
+    "title": "Juggernaut XL",
+    "description": "Photorealistic images at 1024 px",
+    "inputs": [
+      {
+        "name": "prompt",
+        "label": "Prompt",
+        "widget": "textarea",
+        "required": true,
+        "default": "Portrait of an elderly fisherman mending a net at golden hour, 85 mm, shallow depth of field"
+      },
+      {
+        "name": "negative_prompt",
+        "label": "Negative prompt",
+        "widget": "textarea",
+        "placeholder": "What to avoid, e.g. blurry, low quality, text",
+        "default": "cartoon, painting, illustration, blurry, low quality, text, watermark"
+      },
+      {
+        "name": "aspect_ratio",
+        "label": "Aspect ratio",
+        "widget": "select",
+        "options": [
+          "1:1",
+          "16:9",
+          "9:16",
+          "4:3",
+          "3:4",
+          "3:2",
+          "2:3"
+        ],
+        "default": "1:1",
+        "grid_cols": 2
+      },
+      {
+        "name": "seed",
+        "label": "Seed",
+        "widget": "number",
+        "min": 0,
+        "max": 2147483647,
+        "step": 1,
+        "default": 42,
+        "grid_cols": 1
+      },
+      {
+        "name": "steps",
+        "label": "Inference steps",
+        "widget": "slider",
+        "min": 4,
+        "max": 60,
+        "step": 1,
+        "default": 30,
+        "grid_cols": 2
+      },
+      {
+        "name": "guidance_scale",
+        "label": "Guidance",
+        "widget": "slider",
+        "min": 1.0,
+        "max": 15.0,
+        "step": 0.5,
+        "default": 5.0,
+        "grid_cols": 1
+      }
+    ],
+    "output": {
+      "type": "image",
+      "protocol": "ipc_stream"
+    }
+  },
+  "variants": [
+    {
+      "id": "v9",
+      "name": "v9",
+      "description": "Juggernaut XL v9: widely used photorealistic SDXL checkpoint with strong cinematic color grading.",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "diffusers>=0.30.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "sentencepiece",
+            "protobuf",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "RunDiffusion/Juggernaut-XL-v9",
+          "destination": "weights/model"
+        }
+      ]
+    },
+    {
+      "id": "lightning",
+      "name": "Lightning (Fast)",
+      "description": "Juggernaut XL Lightning: distilled for fast 4-8 step generation (use low Guidance 1.5-2.0).",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "diffusers>=0.30.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "sentencepiece",
+            "protobuf",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "RunDiffusion/Juggernaut-XL-Lightning",
+          "destination": "weights/model"
+        }
+      ]
+    },
+    {
+      "id": "v10",
+      "name": "X v10",
+      "description": "Juggernaut X v10: sharper natural textures and better prompt adherence for photography.",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "diffusers>=0.30.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "sentencepiece",
+            "protobuf",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "RunDiffusion/Juggernaut-X-v10",
+          "destination": "weights/model"
+        }
+      ]
+    },
+    {
+      "id": "v11",
+      "name": "XI v11 (Latest)",
+      "description": "Juggernaut XI v11: newest RunDiffusion SDXL release with natural skin detail, lighting, and typography.",
+      "install": [
+        {
+          "step_type": "setup_venv",
+          "python_version": "3.11"
+        },
+        {
+          "step_type": "uv_pip_install",
+          "packages": [
+            "torch>=2.4.0",
+            "diffusers>=0.30.0",
+            "transformers>=4.45.0",
+            "accelerate>=0.34.0",
+            "sentencepiece",
+            "protobuf",
+            "fastapi",
+            "uvicorn",
+            "pydantic"
+          ]
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "RunDiffusion/Juggernaut-XI-v11",
+          "destination": "weights/model"
+        }
+      ]
+    }
+  ]
+}

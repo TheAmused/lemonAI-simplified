@@ -1,0 +1,182 @@
+{
+  "schema_version": "1.0.0",
+  "id": "qwen-coder",
+  "name": "Qwen Coder",
+  "version": "1.0.0",
+  "description": "Alibaba's Qwen coding models in GGUF: code completion, explanation and refactoring in most programming languages. Qwen 3 Coder 30B-A3B is a mixture-of-experts model that runs faster than its size suggests.",
+  "author": "Alibaba Qwen",
+  "license": "Apache-2.0",
+  "category": "code",
+  "engine": "standalone_binary",
+  "hardware_requirements": {
+    "min_vram_gb": 5.5,
+    "min_ram_gb": 8.0,
+    "supported_accelerators": [
+      "cuda",
+      "rocm",
+      "metal",
+      "cpu"
+    ]
+  },
+  "install": [
+    {
+      "step_type": "hf_download",
+      "repo_id": "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF",
+      "filename": "qwen2.5-coder-7b-instruct-q4_k_m.gguf",
+      "destination": "weights/model.gguf",
+      "sha256": "509287f78cb4d4cf6b3843734733b914b2c158e43e22a7f4bf5e963800894d3c"
+    }
+  ],
+  "runtime": {
+    "archetype": "llama_cpp_server",
+    "entrypoint": "llama-server",
+    "arguments": [
+      "--ctx-size",
+      "16384",
+      "--parallel",
+      "1",
+      "--temp",
+      "0.7",
+      "--top-p",
+      "0.8",
+      "--top-k",
+      "20"
+    ],
+    "transport": "loopback_http",
+    "health_endpoint": "/health",
+    "readiness_timeout_sec": 300,
+    "context_window": {
+      "recommended": 16384,
+      "max_supported": 131072
+    },
+    "output_tokens": {
+      "recommended": 4096,
+      "max_supported": 131072
+    }
+  },
+  "ui": {
+    "title": "Qwen Coder",
+    "description": "Code assistant",
+    "inputs": [
+      {
+        "name": "prompt",
+        "label": "Prompt",
+        "widget": "textarea",
+        "required": true,
+        "default": "Write a Python function that parses an ISO 8601 date and returns the weekday, with tests."
+      },
+      {
+        "name": "system_prompt",
+        "label": "System prompt",
+        "widget": "textarea",
+        "placeholder": "Optional instructions for the assistant"
+      },
+      {
+        "name": "temperature",
+        "label": "Temperature",
+        "widget": "slider",
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.05,
+        "default": 0.7,
+        "grid_cols": 2
+      },
+      {
+        "name": "max_tokens",
+        "label": "Max tokens",
+        "widget": "number",
+        "min": 64,
+        "max": 8192,
+        "step": 64,
+        "default": 2048,
+        "grid_cols": 1
+      }
+    ],
+    "output": {
+      "type": "markdown",
+      "protocol": "ipc_stream"
+    }
+  },
+  "variants": [
+    {
+      "id": "2-5-7b",
+      "name": "2.5 7B",
+      "description": "Qwen 2.5 Coder 7B Instruct (official Q4_K_M GGUF on llama.cpp): code completion, refactoring and explanations for 6-8 GB cards. Layers that do not fit the free VRAM run on the CPU (slower)."
+    },
+    {
+      "id": "2-5-14b",
+      "name": "2.5 14B",
+      "description": "Qwen 2.5 Coder 14B Instruct (official Q4_K_M GGUF on llama.cpp): stronger code generation and review for 12 GB cards. Layers that do not fit the free VRAM run on the CPU (slower).",
+      "hardware_requirements": {
+        "min_vram_gb": 10.0,
+        "min_ram_gb": 14.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "Qwen/Qwen2.5-Coder-14B-Instruct-GGUF",
+          "filename": "qwen2.5-coder-14b-instruct-q4_k_m.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "c1e659736d89ac1065fb495330fb824d94001974a4bfa78e7270e43476a8d940"
+        }
+      ]
+    },
+    {
+      "id": "3-30b-a3b",
+      "name": "3 30B-A3B",
+      "description": "Qwen3-Coder-30B-A3B-Instruct (mixture of experts, about 3B active per token; Unsloth Dynamic UD-Q4_K_XL GGUF): agentic coding and long files, fast even with experts in system RAM. Layers that do not fit the free VRAM run on the CPU (slower).",
+      "hardware_requirements": {
+        "min_vram_gb": 18.5,
+        "min_ram_gb": 25.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
+          "filename": "Qwen3-Coder-30B-A3B-Instruct-UD-Q4_K_XL.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "2841aa314d916434860cfb8990347528dcdfe5c350dbcb9d1461dbee88ff2533"
+        }
+      ],
+      "runtime": {
+        "archetype": "llama_cpp_server",
+        "entrypoint": "llama-server",
+        "arguments": [
+          "--ctx-size",
+          "32768",
+          "--parallel",
+          "1",
+          "--temp",
+          "0.7",
+          "--top-p",
+          "0.8",
+          "--top-k",
+          "20"
+        ],
+        "transport": "loopback_http",
+        "health_endpoint": "/health",
+        "readiness_timeout_sec": 300,
+        "context_window": {
+          "recommended": 32768,
+          "max_supported": 262144
+        },
+        "output_tokens": {
+          "recommended": 8192,
+          "max_supported": 262144
+        }
+      }
+    }
+  ]
+}

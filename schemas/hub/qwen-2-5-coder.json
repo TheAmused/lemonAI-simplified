@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.0.0",
+  "id": "qwen-2-5-coder",
+  "name": "Qwen 2.5 Coder 1.5B",
+  "version": "1.0.0",
+  "description": "Code model for completion, refactoring and test writing.",
+  "author": "Alibaba Cloud",
+  "license": "Apache-2.0",
+  "category": "code",
+  "engine": "python_uv",
+  "hardware_requirements": {
+    "min_vram_gb": 3.0,
+    "min_ram_gb": 8.0,
+    "supported_accelerators": [
+      "cuda",
+      "cpu"
+    ]
+  },
+  "install": [
+    {
+      "step_type": "setup_venv",
+      "python_version": "3.11"
+    },
+    {
+      "step_type": "uv_pip_install",
+      "packages": [
+        "torch>=2.4.0",
+        "transformers>=4.45.0",
+        "accelerate>=0.34.0",
+        "fastapi",
+        "uvicorn",
+        "pydantic"
+      ]
+    },
+    {
+      "step_type": "hf_download",
+      "repo_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "destination": "weights/model"
+    }
+  ],
+  "runtime": {
+    "archetype": "transformers_pipeline",
+    "entrypoint": "transformers_runner.py",
+    "arguments": [],
+    "transport": "loopback_http",
+    "health_endpoint": "/health",
+    "readiness_timeout_sec": 300,
+    "context_window": {
+      "recommended": 8192,
+      "max_supported": 32768
+    },
+    "output_tokens": {
+      "recommended": 2048,
+      "max_supported": 32768
+    }
+  },
+  "ui": {
+    "title": "Qwen 2.5 Coder Assistant",
+    "description": "Polyglot coding and refactoring partner",
+    "inputs": [
+      {
+        "name": "prompt",
+        "label": "Instruction or code",
+        "widget": "textarea",
+        "required": true,
+        "default": "Write an idiomatic Python script that validates JSON schema contracts."
+      },
+      {
+        "name": "temperature",
+        "label": "Temperature",
+        "widget": "slider",
+        "min": 0.0,
+        "max": 1.0,
+        "step": 0.05,
+        "default": 0.2,
+        "grid_cols": 2
+      },
+      {
+        "name": "max_tokens",
+        "label": "Max tokens",
+        "widget": "number",
+        "min": 64,
+        "max": 4096,
+        "step": 64,
+        "default": 768,
+        "grid_cols": 1
+      }
+    ],
+    "output": {
+      "type": "markdown",
+      "protocol": "ipc_stream"
+    }
+  }
+}

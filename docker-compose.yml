@@ -1,0 +1,75 @@
+# LemonAI Hub backend.
+#
+#   cp .env.example .env     # then fill in the secrets
+#   docker compose up --build
+#
+# The compose file refuses to start without real secrets: there are no default credentials.
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: lemonai_backend_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-lemonai}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-lemonai_hub}
+    # No published port: only the api container needs to reach the database.
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: lemonai_backend_api
+    restart: unless-stopped
+    environment:
+      LEMON_ENV: ${LEMON_ENV:-development}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-lemonai}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-lemonai_hub}
+      SECRET_KEY: ${SECRET_KEY:?set SECRET_KEY (32+ random bytes) in .env}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?set JWT_SECRET_KEY (32+ random bytes) in .env}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://tauri.localhost,tauri://localhost,http://localhost:1420}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@lemonai.local}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-AdminPass123!}
+      # 1 = every community upload waits for an administrator (default: only uploads failing the standards)
+      HUB_REQUIRE_APPROVAL: ${HUB_REQUIRE_APPROVAL:-0}
+      # Open reports from this many users hide an entry until reviewed (0 = never)
+      REPORT_HOLD_THRESHOLD: ${REPORT_HOLD_THRESHOLD:-3}
+      # E-mail for password reset codes and notifications (nothing is sent without SMTP_HOST)
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USERNAME: ${SMTP_USERNAME:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_SECURITY: ${SMTP_SECURITY:-starttls}
+      MAIL_FROM: ${MAIL_FROM:-}
+    ports:
+      # Loopback only by default; put a TLS-terminating proxy in front to expose it.
+      - "${API_BIND:-127.0.0.1}:5000:5000"
+    volumes:
+      - backend_uploads:/data/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_HUB_API_URL: ${VITE_HUB_API_URL:-http://127.0.0.1:5000}
+        VITE_DEMO_ACCOUNTS: ${VITE_DEMO_ACCOUNTS:-true}
+    container_name: lemonai_backend_frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_BIND:-127.0.0.1}:1420:80"
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
+  backend_uploads:

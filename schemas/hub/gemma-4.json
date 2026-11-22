@@ -1,0 +1,262 @@
+{
+  "schema_version": "1.0.0",
+  "id": "gemma-4",
+  "name": "Gemma 4",
+  "version": "1.0.0",
+  "description": "Google's lightweight, state-of-the-art open models on llama.cpp supporting text, reasoning, image, and audio input. Multi-turn chat with automatic context management.",
+  "author": "Google DeepMind (GGUF by Unsloth)",
+  "license": "Apache-2.0",
+  "category": "llm",
+  "engine": "standalone_binary",
+  "hardware_requirements": {
+    "min_vram_gb": 6.0,
+    "min_ram_gb": 8.0,
+    "supported_accelerators": [
+      "cuda",
+      "rocm",
+      "metal",
+      "cpu"
+    ]
+  },
+  "install": [
+    {
+      "step_type": "hf_download",
+      "repo_id": "unsloth/gemma-4-E4B-it-GGUF",
+      "filename": "gemma-4-E4B-it-Q4_K_M.gguf",
+      "destination": "weights/model.gguf",
+      "sha256": "85a896a047553e842f25297ee5b031d64ff30147d9c4af17b1e4b394cd1fab87"
+    },
+    {
+      "step_type": "hf_download",
+      "repo_id": "unsloth/gemma-4-E4B-it-GGUF",
+      "filename": "mmproj-BF16.gguf",
+      "destination": "weights/mmproj.gguf",
+      "sha256": "ee01cba03fd9c71ea2ea722225d24a84f72e7197714367e550ef705ef8851bc6"
+    }
+  ],
+  "runtime": {
+    "archetype": "llama_cpp_server",
+    "entrypoint": "llama-server",
+    "arguments": [
+      "--ctx-size",
+      "8192",
+      "--parallel",
+      "1",
+      "--temp",
+      "1.0",
+      "--top-p",
+      "0.95",
+      "--top-k",
+      "64"
+    ],
+    "transport": "loopback_http",
+    "health_endpoint": "/health",
+    "readiness_timeout_sec": 300,
+    "context_window": {
+      "recommended": 8192,
+      "max_supported": 131072
+    },
+    "output_tokens": {
+      "recommended": 2048,
+      "max_supported": 131072
+    }
+  },
+  "ui": {
+    "title": "Gemma 4",
+    "description": "General chat, reasoning and coding",
+    "inputs": [
+      {
+        "name": "prompt",
+        "label": "Prompt",
+        "widget": "textarea",
+        "required": true,
+        "default": "Explain the difference between a process and a thread in five sentences."
+      },
+      {
+        "name": "system_prompt",
+        "label": "System prompt",
+        "widget": "textarea",
+        "placeholder": "Optional instructions for the assistant"
+      },
+      {
+        "name": "thinking",
+        "label": "Thinking",
+        "widget": "switch",
+        "default": false,
+        "description": "Let the model reason before it answers (slower, uses part of the output budget)"
+      },
+      {
+        "name": "temperature",
+        "label": "Temperature",
+        "widget": "slider",
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.05,
+        "default": 1.0,
+        "grid_cols": 2
+      },
+      {
+        "name": "max_tokens",
+        "label": "Max tokens",
+        "widget": "number",
+        "min": 64,
+        "max": 8192,
+        "step": 64,
+        "default": 2048,
+        "grid_cols": 1
+      }
+    ],
+    "output": {
+      "type": "markdown",
+      "protocol": "ipc_stream"
+    }
+  },
+  "variants": [
+    {
+      "id": "e2b",
+      "name": "E2B",
+      "hardware_requirements": {
+        "min_vram_gb": 3.0,
+        "min_ram_gb": 8.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/gemma-4-E2B-it-GGUF",
+          "filename": "gemma-4-E2B-it-Q4_K_M.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "889ff018599be5240292ff294711db187abf2f664a7c2b60481cfc6b7ee87bb1"
+        }
+      ]
+    },
+    {
+      "id": "e4b",
+      "name": "E4B Multimodal",
+      "hardware_requirements": {
+        "min_vram_gb": 6.0,
+        "min_ram_gb": 8.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/gemma-4-E4B-it-GGUF",
+          "filename": "gemma-4-E4B-it-Q4_K_M.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "85a896a047553e842f25297ee5b031d64ff30147d9c4af17b1e4b394cd1fab87"
+        },
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/gemma-4-E4B-it-GGUF",
+          "filename": "mmproj-BF16.gguf",
+          "destination": "weights/mmproj.gguf",
+          "sha256": "ee01cba03fd9c71ea2ea722225d24a84f72e7197714367e550ef705ef8851bc6"
+        }
+      ]
+    },
+    {
+      "id": "12b",
+      "name": "12B",
+      "context_window": {
+        "recommended": 8192,
+        "max_supported": 262144
+      },
+      "output_tokens": {
+        "recommended": 4096,
+        "max_supported": 262144
+      },
+      "hardware_requirements": {
+        "min_vram_gb": 12.0,
+        "min_ram_gb": 16.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/gemma-4-12B-it-GGUF",
+          "filename": "gemma-4-12B-it-Q4_K_M.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "bf4ebfc0549c669147d2f954f9a3d4d420f1a92e423da23498877119ff3ca738"
+        }
+      ]
+    },
+    {
+      "id": "26b-a4b",
+      "name": "26B A4B MoE",
+      "context_window": {
+        "recommended": 8192,
+        "max_supported": 262144
+      },
+      "output_tokens": {
+        "recommended": 4096,
+        "max_supported": 262144
+      },
+      "hardware_requirements": {
+        "min_vram_gb": 20.0,
+        "min_ram_gb": 32.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "filename": "gemma-4-26B-A4B-it-Q4_K_M.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "c185faec0c9497e2f5ff50b8686d0b6183dd0fc3bc440d99ba647895aa33ea48"
+        }
+      ]
+    },
+    {
+      "id": "31b",
+      "name": "31B",
+      "context_window": {
+        "recommended": 8192,
+        "max_supported": 262144
+      },
+      "output_tokens": {
+        "recommended": 4096,
+        "max_supported": 262144
+      },
+      "hardware_requirements": {
+        "min_vram_gb": 24.0,
+        "min_ram_gb": 32.0,
+        "supported_accelerators": [
+          "cuda",
+          "rocm",
+          "metal",
+          "cpu"
+        ]
+      },
+      "install": [
+        {
+          "step_type": "hf_download",
+          "repo_id": "unsloth/gemma-4-31B-it-GGUF",
+          "filename": "gemma-4-31B-it-Q4_K_M.gguf",
+          "destination": "weights/model.gguf",
+          "sha256": "1356bf48e9a265691cfad4fc42036c0a0c448d3aa002a281745423f03bdf8fa8"
+        }
+      ]
+    }
+  ]
+}
